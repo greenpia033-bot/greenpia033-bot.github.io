@@ -20,14 +20,14 @@ const crypto = require('crypto');
 const SOURCES = {
   // 博客园 RSS —— 把 YOUR_USERNAME 换成你的博客园用户名
   cnblogs: {
-    enabled: true,  // 暂时关闭，有了文章再开
+    enabled: true,  // 发文后再开
     name: '博客园',
     rss: 'https://www.cnblogs.com/greenpia/rss',  // ← 去 i.cnblogs.com/settings 查看
   },
   // 简书主页 —— 把 YOUR_USER_ID 换成你的简书用户 ID
   // （打开你的简书主页，URL 里 /u/ 后面那串就是）
   jianshu: {
-    enabled: true,  // 暂时关闭，有了文章再开
+    enabled: true,  // 发文后再开
     name: '简书',
     userId: 'YOUR_USER_ID',
     homeUrl: 'https://www.jianshu.com/u/afd28858c582',
@@ -170,13 +170,18 @@ async function fetchJianshu(config) {
       });
 
       const $ = cheerio.load(data);
-      const items = $('.note-list li, .note-list .content');
+      // 只抓取文章列表中的文章链接（/p/ 开头），排除专题 /c/ 和用户 /u/
+      const items = $('.note-list li')
+        .filter((_, el) => {
+          const href = $(el).find('a.title').attr('href') || '';
+          return href.startsWith('/p/');
+        });
 
       if (items.length === 0) break;
 
       items.each((_, el) => {
         const $el = $(el);
-        const $title = $el.find('.title, a.title');
+        const $title = $el.find('a.title');
         const title = $title.text().trim();
         const href = $title.attr('href');
         const $time = $el.find('.time');

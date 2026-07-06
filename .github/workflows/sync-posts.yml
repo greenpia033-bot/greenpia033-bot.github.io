@@ -8,6 +8,7 @@ on:
 # 给 GITHUB_TOKEN 写权限，否则 git push 会失败
 permissions:
   contents: write
+  actions: write
 
 jobs:
   sync:
@@ -41,3 +42,10 @@ jobs:
           git add source/_posts/ .sync-log.json
           git commit -m "📝 sync: auto-import external posts ($(date +%Y-%m-%d))"
           git push
+
+      - name: Trigger deploy
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          gh workflow run deploy.yml --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ github.token }}

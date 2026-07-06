@@ -6,7 +6,7 @@
 title: Green_Pia's Blog
 subtitle: ''
 description: '欢迎来到我的blog'
-keywords: 电子，控制，编程
+keywords: 控制,计算机,杂项
 author: Green_Pia
 language: zh-CN
 timezone: 'Asia/Shanghai'
@@ -65,8 +65,11 @@ index_generator:
   order_by: -date
 
 # Category & Tag
-default_category: uncategorized
+default_category: 杂项
 category_map:
+  控制: 控制
+  计算机: 计算机
+  杂项: 杂项
 tag_map:
 
 # Metadata elements
