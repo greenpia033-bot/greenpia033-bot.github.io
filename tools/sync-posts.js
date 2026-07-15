@@ -255,9 +255,12 @@ function extractCnblogsBody(html) {
   content = content.replace(
     /(src|href)="(\/[^"]+)"/g,
     (_, attr, rel) => rel.startsWith('//')
-      ? `${attr}="https:${rel}"`
-      : `${attr}="https://www.cnblogs.com${rel}"`
-  );
+     ? `${attr}="https:${rel}"`
+     : `${attr}="https://www.cnblogs.com${rel}"`
+ );
+
+  // 博客园图片懒加载：data-src → src
+  content = content.replace(/<img([^>]*?)data-src="([^"]+)"([^>]*?)>/g, '<img$1src="$2"$3>');
 
   return content.trim() || null;
 }
