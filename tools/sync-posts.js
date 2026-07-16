@@ -338,20 +338,17 @@ async function syncCnblogs() {
 }
 
 function buildCnblogsPost(item, body, postId) {
-  const allLabels = item.categories || [];
-  const tags = allLabels.filter(l => !l.includes('/'));
-  const categories = allLabels
-    .filter(l => l.includes('/'))
-    .map(l => l.split('/').map(s => s.trim()).filter(Boolean));
+  const allLabels = (item.categories || []).filter(l => l.trim());
+  // 博客园的文章分类直接映射为 Hexo categories
+  const categories = allLabels;
+  const tags = [];
 
-  const tagsYaml = tags.length > 0
-    ? `tags:\n${tags.map(t => `  - ${t}`).join('\n')}`
-    : 'tags: []';
+  const tagsYaml = 'tags: []';
 
   let categoriesYaml = '';
   if (categories.length > 0) {
     categoriesYaml = '\ncategories:\n'
-      + categories.map(parts => parts.map(p => `  - ${p}`).join('\n')).join('\n');
+      + categories.map(c => `  - ${c}`).join('\n');
   }
 
   const dateStr = formatDate(item.pubDate);

@@ -1,20 +1,39 @@
 {% extends '_layout.njk' %}
-{% import '_macro/sidebar.njk' as sidebar_template with context %}
 
 {% block title %}{{ title }}{% if theme.index_with_subtitle and subtitle %} - {{ subtitle }}{% endif %}{% endblock %}
 
-{% block class %}index posts-expand{% endblock %}
+{% block class %}posts-expand{% endblock %}
 
 {% block content %}
-
+<div class="post-grid">
   {%- for post in page.posts.toArray() %}
-    {{ partial('_macro/post.njk', {post: post, is_index: true}) }}
+    <div class="post-card">
+      <div class="post-card-body">
+        <h2 class="post-card-title">
+          <a href="{{ url_for(post.path) }}">{{ post.title or __('post.untitled') }}</a>
+        </h2>
+
+        {%- if post.excerpt %}
+          <p class="post-card-excerpt">{{ strip_html(post.excerpt) | truncate(120) }}</p>
+        {%- elif post.description %}
+          <p class="post-card-excerpt">{{ post.description | truncate(120) }}</p>
+        {%- else %}
+          <p class="post-card-excerpt">{{ strip_html(post.content) | truncate(120) }}</p>
+        {%- endif %}
+
+        <div class="post-card-meta">
+          <span class="post-date">
+            <i class="fa-regular fa-calendar"></i>
+            {{ date(post.date, config.date_format) }}
+          </span>
+          <a class="read-more" href="{{ url_for(post.path) }}">
+            {{ __('post.read_more') }} <i class="fa fa-angle-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
   {%- endfor %}
+</div>
 
-  {%- include '_partials/pagination.njk' -%}
-
-{% endblock %}
-
-{% block sidebar %}
-  {{ sidebar_template.render(false) }}
+{%- include '_partials/pagination.njk' -%}
 {% endblock %}

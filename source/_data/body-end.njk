@@ -1,0 +1,29 @@
+<script>
+(function() {
+  // Scroll-triggered glass navbar
+  var header = document.querySelector('.header');
+  if (!header) return;
+
+  function onScroll() {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Hero scroll-down arrow click
+  var scrollArrow = document.querySelector('.hero-scroll');
+  if (scrollArrow) {
+    scrollArrow.addEventListener('click', function() {
+      var mainContent = document.querySelector('.main-inner');
+      if (mainContent) {
+        mainContent.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+})();
+</script>

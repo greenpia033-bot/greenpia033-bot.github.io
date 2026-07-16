@@ -1,6 +1,8 @@
 {% macro render(posts) %}
+{%- if posts %}
+{%- set posts_arr = posts.toArray() if posts.toArray else posts %}
 {%- set current_year = '1970' %}
-{%- for post in posts.toArray() %}
+{%- for post in posts_arr %}
 
   {%- set year = date(post.date, 'YYYY') %}
 
@@ -38,4 +40,5 @@
   </article>
 
 {%- endfor %}
+{%- endif %}
 {% endmacro %}

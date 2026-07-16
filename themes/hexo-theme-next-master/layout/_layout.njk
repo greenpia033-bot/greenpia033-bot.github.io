@@ -17,22 +17,91 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}>
-  <div class="headband"></div>
-
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-        {%- include '_partials/header/index.njk' -%}
-      </header>
-      {%- if theme.sidebar.display !== 'remove' %}
-        {% block sidebar %}{% endblock %}
+  {%- if is_home() %}
+  <section class="hero-banner">
+    {%- if theme.hero and theme.hero.bg_image %}
+    <img class="hero-bg-img" src="{{ url_for(theme.hero.bg_image) }}" alt="">
+    {%- endif %}
+    <div class="hero-content">
+      <h1 class="hero-title">{{ title }}</h1>
+      {%- if theme.hero and theme.hero.subtitle %}
+      <p class="hero-subtitle">{{ theme.hero.subtitle }}</p>
+      {%- elif subtitle %}
+      <p class="hero-subtitle">{{ subtitle }}</p>
       {%- endif %}
     </div>
+    <div class="hero-scroll" aria-label="Scroll down">
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+  {%- endif %}
 
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+    {%- include '_partials/header/index.njk' -%}
+  </header>
+
+  <main class="main">
     <div class="main-inner {% block class %}{% endblock %}">
-      {%- include '_partials/header/sub-menu.njk' -%}
-      {% block content %}{% endblock %}
-      {%- include '_partials/comments.njk' -%}
+      {%- if theme.sidebar.display !== 'remove' %}
+      <aside class="sidebar-custom">
+        <div class="sidebar-custom-inner">
+          {%- if theme.avatar.url %}
+          <div class="sidebar-avatar">
+            <img src="{{ url_for(theme.avatar.url) }}" alt="{{ author }}">
+          </div>
+          {%- else %}
+          <div class="sidebar-avatar">
+            <img src="{{ url_for(theme.images + '/avatar.gif') }}" alt="{{ author }}">
+          </div>
+          {%- endif %}
+          <div class="sidebar-name">{{ author }}</div>
+
+          {%- if theme.site_state %}
+          <div class="sidebar-stats">
+            {%- if config.archive_dir != '/' and site.posts.length > 0 %}
+            <a class="sidebar-stat-item" href="{{ url_for(config.archive_dir + '/') }}">
+              <div class="stat-num">{{ site.posts.length }}</div>
+              <div class="stat-label">{{ __('state.posts') }}</div>
+            </a>
+            {%- endif %}
+            {%- if site.categories.length > 0 %}
+            <a class="sidebar-stat-item" href="{{ url_for('/category/') }}">
+              <div class="stat-num">{{ site.categories.length }}</div>
+              <div class="stat-label">{{ __('state.categories') }}</div>
+            </a>
+            {%- endif %}
+            {%- if site.tags.length > 0 %}
+            <a class="sidebar-stat-item" href="{{ url_for('/tag/') }}">
+              <div class="stat-num">{{ site.tags.length }}</div>
+              <div class="stat-label">{{ __('state.tags') }}</div>
+            </a>
+            {%- endif %}
+          </div>
+          {%- endif %}
+
+          <div class="sidebar-links-custom">
+            <a href="{{ url_for(config.archive_dir + '/') }}">
+              <i class="fa-regular fa-archive"></i> {{ __('menu.archives') }}
+            </a>
+            {%- if site.tags.length > 0 %}
+            <a href="{{ url_for('/tag/') }}">
+              <i class="fa-regular fa-tags"></i> {{ __('menu.tags') }}
+            </a>
+            {%- endif %}
+            {%- if site.categories.length > 0 %}
+            <a href="{{ url_for('/category/') }}">
+              <i class="fa-regular fa-folder"></i> {{ __('menu.categories') }}
+            </a>
+            {%- endif %}
+          </div>
+        </div>
+      </aside>
+      {%- endif %}
+
+      <div class="content-area">
+        {% block content %}{% endblock %}
+        {% if not is_home() %}{%- include '_partials/comments.njk' -%}{% endif %}
+      </div>
     </div>
   </main>
 
