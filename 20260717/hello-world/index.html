@@ -23,21 +23,21 @@
     <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://greenpia033-bot.github.io/20260702/hello-world/">
+<meta property="og:url" content="http://greenpia033-bot.github.io/20260717/hello-world/">
 <meta property="og:site_name" content="Green_Pia&#39;s Blog">
 <meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-07-02T12:06:30.737Z">
-<meta property="article:modified_time" content="2026-07-06T17:35:35.868Z">
+<meta property="article:published_time" content="2026-07-16T19:24:42.105Z">
+<meta property="article:modified_time" content="2026-07-16T19:24:42.108Z">
 <meta property="article:author" content="Green_Pia">
-<meta property="article:tag" content="控制,计算机,杂项">
+<meta property="article:tag" content="杂项">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://greenpia033-bot.github.io/20260702/hello-world/">
+<link rel="canonical" href="http://greenpia033-bot.github.io/20260717/hello-world/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://greenpia033-bot.github.io/20260702/hello-world/","path":"20260702/hello-world/","title":"Hello World"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://greenpia033-bot.github.io/20260717/hello-world/","path":"20260717/hello-world/","title":"Hello World"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Hello World | Green_Pia's Blog</title>
@@ -79,7 +79,7 @@
   --glass-border: rgba(255, 255, 255, 0.18);
   --glass-border-dark: rgba(255, 255, 255, 0.08);
   --card-radius: 14px;
-  --sidebar-width: 200px;
+  --sidebar-width: 180px;
 }
 
 body {
@@ -123,6 +123,25 @@ body {
 .hero-content .hero-subtitle {
   font-size: 1.2rem; font-weight: 400; opacity: 0.75; margin: 0; line-height: 1.5;
 }
+/* Hero gradual reveal animation */
+.hero-content .hero-title,
+.hero-content .hero-subtitle {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.hero-content .hero-title.visible,
+.hero-content .hero-subtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hero-content .hero-title.visible { transition-duration: 0.5s; }
+.hero-content .hero-subtitle.visible { transition-duration: 0.5s; opacity: 0.75; }
+.hero-content.fast-forward .hero-title,
+.hero-content.fast-forward .hero-subtitle {
+  transition-duration: 0.15s !important;
+}
+
 .hero-scroll {
   position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
@@ -144,14 +163,14 @@ body {
   transition: background 0.3s, box-shadow 0.3s, padding 0.3s; background: transparent;
 }
 .header.scrolled {
-  background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 8px 0;
 }
 .dark-mode .header.scrolled {
   background: rgba(20,20,40,0.85); box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 .header-inner {
-  max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+  max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
 }
 .header .site-brand-container { background: none; display: flex; align-items: center; gap: 10px; }
 .header .brand { background: none; color: #fff; font-size: 1.2rem; font-weight: 600; text-decoration: none; }
@@ -179,7 +198,7 @@ header.header { padding-top: 0; }
 .main { padding-top: 0; }
 .column { display: none; }
 .main-inner {
-  display: flex; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 100px 24px 60px;
+  display: flex; gap: 48px; max-width: 1200px; margin: 0 auto; padding: 100px 16px 60px 8px;
   position: relative; z-index: 1; background: none;
 }
 
@@ -188,11 +207,11 @@ header.header { padding-top: 0; }
   max-height: calc(100vh - 100px);
 }
 .sidebar-custom-inner {
-  background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   border: 1px solid var(--glass-border); border-radius: var(--card-radius);
   padding: 24px 16px; display: flex; flex-direction: column; align-items: center; gap: 16px;
 }
-.dark-mode .sidebar-custom-inner { background: var(--glass-bg-dark); border-color: var(--glass-border-dark); }
+.dark-mode .sidebar-custom-inner { background: var(--glass-bg-dark); border-color: var(--glass-border-dark); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
 .sidebar-avatar { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
 .sidebar-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .sidebar-name { font-size: 1.05rem; font-weight: 600; color: #222; text-align: center; }
@@ -205,7 +224,7 @@ header.header { padding-top: 0; }
 .sidebar-stat-item { text-align: center; text-decoration: none; color: inherit; }
 .sidebar-stat-item .stat-num { font-size: 1.1rem; font-weight: 700; color: #333; }
 .dark-mode .sidebar-stat-item .stat-num { color: #ccc; }
-.sidebar-stat-item .stat-label { font-size: 0.7rem; color: #999; margin-top: 2px; }
+.sidebar-stat-item .stat-label { font-size: 0.7rem; color: #777; margin-top: 2px; }
 .sidebar-links-custom { width: 100%; display: flex; flex-direction: column; gap: 2px; }
 .sidebar-links-custom a {
   display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px;
@@ -215,13 +234,21 @@ header.header { padding-top: 0; }
 .dark-mode .sidebar-links-custom a { color: #aaa; }
 .dark-mode .sidebar-links-custom a:hover { background: rgba(79,142,247,0.15); color: #8ab4f8; }
 .sidebar-links-custom a i { width: 18px; text-align: center; font-size: 0.85rem; }
+.sidebar-github-link {
+  display: flex; justify-content: center; align-items: center;
+  padding: 8px; margin-top: 8px; border-radius: 10px; transition: background 0.2s;
+}
+.sidebar-github-link:hover { background: rgba(79,142,247,0.08); }
+.dark-mode .sidebar-github-link:hover { background: rgba(79,142,247,0.15); }
+.sidebar-github-link i { font-size: 1.2rem; opacity: 0.65; transition: opacity 0.2s; }
+.sidebar-github-link:hover i { opacity: 0.95; }
 
 .content-area { flex: 1; min-width: 0; }
 
 .post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
 .post-card {
-  background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   border: 1px solid var(--glass-border); border-radius: var(--card-radius); overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column;
 }
@@ -235,10 +262,10 @@ header.header { padding-top: 0; }
 .dark-mode .post-card-title a { color: #e0e0e0; }
 .dark-mode .post-card-title a:hover { color: #8ab4f8; }
 .post-card-excerpt {
-  font-size: 0.88rem; color: #777; line-height: 1.6; flex: 1;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 16px 0;
+  font-size: 0.95rem; color: #777; line-height: 1.6; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 16px 0;
 }
-.dark-mode .post-card-excerpt { color: #999; }
+.dark-mode .post-card-excerpt { color: #777; }
 .post-card-meta {
   display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #aaa;
   padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06);
@@ -254,9 +281,54 @@ header.header { padding-top: 0; }
 
 .footer {
   background: rgba(255,255,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(0,0,0,0.05); padding: 24px 0; position: relative; z-index: 1;
+  border-top: 1px solid rgba(0,0,0,0.05); padding: 24px 0; position: relative; z-index: 1; 
 }
 .dark-mode .footer { background: rgba(20,20,40,0.6); border-color: rgba(255,255,255,0.05); }
+
+.powered-by {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px;
+  font-size: 0.8rem; color: #777;
+}
+.footer-motto {
+  text-align: center; margin-bottom: 8px; font-size: 0.9rem; color: #666;
+}
+.dark-mode .powered-by { color: #777; }
+.dark-mode .footer-motto { color: #aaa; }
+.footer-divider { opacity: 0.4; }
+
+
+/* Floating action buttons */
+.floating-actions {
+  position: fixed; bottom: 24px; left: 24px; z-index: 50;
+  display: flex; flex-direction: column; gap: 10px;
+  opacity: 0; transform: translateY(12px); transition: opacity 0.4s, transform 0.4s; pointer-events: none;
+}
+.floating-actions.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.fa-btn {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border); box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  color: #555; font-size: 1rem; transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.fa-btn:hover { background: rgba(255,255,255,0.95); color: var(--primary-color); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.dark-mode .fa-btn { background: rgba(30,30,30,0.75); border-color: var(--glass-border-dark); color: #aaa; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.dark-mode .fa-btn:hover { background: rgba(40,40,40,0.95); color: #8ab4f8; }
+/* Floating stats box */
+.floating-stats {
+  position: fixed; bottom: 24px; right: 24px; z-index: 50;
+  background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border); border-radius: var(--card-radius);
+  padding: 16px 20px; display: flex; gap: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  opacity: 0; transform: translateY(12px); transition: opacity 0.4s, transform 0.4s; pointer-events: none;
+}
+.floating-stats.visible { opacity: 1; transform: translateY(0); }
+.dark-mode .floating-stats { background: var(--glass-bg-dark); border-color: var(--glass-border-dark); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+.floating-stats-item { text-align: center; }
+.floating-stats-num { display: block; font-size: 1.15rem; font-weight: 700; color: #333; }
+.dark-mode .floating-stats-num { color: #ccc; }
+.floating-stats-label { display: block; font-size: 0.7rem; color: #777; margin-top: 2px; }
 
 @media (max-width: 900px) {
   .main-inner { flex-direction: column; padding: 80px 16px 40px; }
@@ -306,7 +378,7 @@ header.header { padding-top: 0; }
       <aside class="sidebar-custom">
         <div class="sidebar-custom-inner">
           <div class="sidebar-avatar">
-            <img src="/images/avatar.gif" alt="Green_Pia">
+            <img src="https://github.com/greenpia033-bot.png" alt="Green_Pia">
           </div>
           <div class="sidebar-name">Green_Pia</div>
           <div class="sidebar-stats">
@@ -319,22 +391,25 @@ header.header { padding-top: 0; }
               <div class="stat-label">分类</div>
             </a>
             <a class="sidebar-stat-item" href="/tag/">
-              <div class="stat-num">2</div>
+              <div class="stat-num">3</div>
               <div class="stat-label">标签</div>
             </a>
           </div>
 
           <div class="sidebar-links-custom">
             <a href="/archives/">
-              <i class="fa-regular fa-archive"></i> 归档
+              <i class="fa-solid fa-box-archive"></i> 归档
             </a>
             <a href="/tag/">
-              <i class="fa-regular fa-tags"></i> 标签
+              <i class="fa-solid fa-tags"></i> 标签
             </a>
             <a href="/category/">
-              <i class="fa-regular fa-folder"></i> 分类
+              <i class="fa-solid fa-folder"></i> 分类
             </a>
           </div>
+          <a href="https://github.com/greenpia033-bot" class="sidebar-github-link" title="GitHub" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i>
+          </a>
         </div>
       </aside>
 
@@ -348,10 +423,10 @@ header.header { padding-top: 0; }
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://greenpia033-bot.github.io/20260702/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://greenpia033-bot.github.io/20260717/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://github.com/greenpia033-bot.png">
       <meta itemprop="name" content="Green_Pia">
     </span>
 
@@ -377,14 +452,7 @@ header.header { padding-top: 0; }
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2026-07-02 20:06:30" itemprop="dateCreated datePublished" datetime="2026-07-02T20:06:30+08:00">2026-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-07-07 01:35:35" itemprop="dateModified" datetime="2026-07-07T01:35:35+08:00">2026-07-07</time>
+      <time title="创建时间：2026-07-17 03:24:42" itemprop="dateCreated datePublished" datetime="2026-07-17T03:24:42+08:00">2026-07-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -426,16 +494,19 @@ header.header { padding-top: 0; }
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%82%E9%A1%B9/" rel="tag"># 杂项</a>
+          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/20260708/2026-07-08-%E8%AE%A4%E4%B8%BA%E4%BC%9A%E6%83%B3%E8%A6%81%E5%88%B7%E4%B8%80%E4%BA%9B%E8%AF%AD%E6%B3%95%E7%AE%97%E6%B3%95%E9%A2%98%E4%BA%86/" rel="prev" title="认为会想要刷一些语法&#x2F;算法题了">
+                  <i class="fa fa-angle-left"></i> 认为会想要刷一些语法/算法题了
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/20260704/2026-07-04-hello-%E7%AE%80%E4%B9%A6/" rel="next" title="Sat Jul 04 2026 00:00:00 GMT+0800 (中国标准时间)">
-                  Sat Jul 04 2026 00:00:00 GMT+0800 (中国标准时间) <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -452,6 +523,30 @@ header.header { padding-top: 0; }
     </div>
   </main>
 
+  <div class="floating-stats" id="floating-stats">
+    <div class="floating-stats-item">
+      <span class="floating-stats-num">4</span>
+      <span class="floating-stats-label">文章</span>
+    </div>
+    <div class="floating-stats-item">
+      <span class="floating-stats-num" id="total-wordcount">…</span>
+      <span class="floating-stats-label">字数</span>
+    </div>
+    <div class="floating-stats-item">
+      <span class="floating-stats-num" id="visitor-count">…</span>
+      <span class="floating-stats-label">访客</span>
+    </div>
+  </div>
+
+  <div class="floating-actions" id="floating-actions">
+    <button class="fa-btn" id="btn-scroll-top" title="回到顶部" aria-label="回到顶部">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    <button class="fa-btn" id="btn-theme-toggle" title="切换主题" aria-label="切换日间/夜间模式">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+  </div>
+
   <footer class="footer">
     <div class="footer-inner">
 
@@ -463,7 +558,10 @@ header.header { padding-top: 0; }
     </span>
     <span class="author" itemprop="copyrightHolder">Green_Pia</span>
   </div>
+  <div class="footer-motto">只要心拥有寄托，流落到哪里都不再是远方</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+    <span class="footer-divider">|</span>
+    <span>本站已运行 <span id="site-runtime">…</span></span>
   </div>
 
     </div>
@@ -486,6 +584,149 @@ header.header { padding-top: 0; }
 </noscript>
 <script>
 (function() {
+  // ── Theme background image ──
+  var themeBgLight = '';  // 日间模式背景图 URL，留空则无
+  var themeBgDark  = '';  // 夜间模式背景图 URL，留空则无
+
+  function applyThemeBg() {
+    var isDark = document.documentElement.classList.contains('dark-mode');
+    var bgUrl = isDark ? themeBgDark : themeBgLight;
+    if (bgUrl) {
+      document.body.style.backgroundImage = 'url(' + bgUrl + ')';
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+    } else {
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundAttachment = '';
+    }
+  }
+  applyThemeBg();
+
+  // ── Hero gradual reveal ──
+  var heroContent = document.querySelector('.hero-content');
+  var heroTitle = document.querySelector('.hero-title');
+  var heroSubtitle = document.querySelector('.hero-subtitle');
+  var revealed = false;
+
+  function revealHero() {
+    if (revealed) return;
+    revealed = true;
+    if (heroTitle) heroTitle.classList.add('visible');
+    setTimeout(function() {
+      if (heroSubtitle) heroSubtitle.classList.add('visible');
+    }, 350);
+  }
+
+  function fastForward() {
+    if (heroContent) heroContent.classList.add('fast-forward');
+    if (heroTitle) { heroTitle.classList.add('visible'); }
+    if (heroSubtitle) { heroSubtitle.classList.add('visible'); }
+    revealed = true;
+  }
+
+  if (heroTitle || heroSubtitle) {
+    setTimeout(revealHero, 600);
+
+    var heroScrollHandler = function() {
+      if (window.scrollY > 30) {
+        fastForward();
+        window.removeEventListener('scroll', heroScrollHandler);
+      }
+    };
+    window.addEventListener('scroll', heroScrollHandler, { passive: true });
+  }
+
+  // ── Site running time ──
+  var startDate = new Date('2026-07-04T09:52:18+08:00');
+  var runtimeEl = document.getElementById('site-runtime');
+  function updateRuntime() {
+    if (!runtimeEl) return;
+    var now = new Date();
+    var diffMs = now - startDate;
+    var totalHours = Math.floor(diffMs / 3600000);
+    var days = Math.floor(totalHours / 24);
+    var hours = totalHours % 24;
+    runtimeEl.textContent = days + '天' + hours + '小时';
+  }
+  updateRuntime();
+  setInterval(updateRuntime, 60000);
+
+  // ── Total word count ──
+  var wordcountEl = document.getElementById('total-wordcount');
+  if (wordcountEl) {
+    var posts = document.querySelectorAll('.post-card-body');
+    var totalChars = 0;
+    posts.forEach(function(card) {
+      var excerpt = card.querySelector('.post-card-excerpt');
+      if (excerpt) totalChars += excerpt.textContent.length;
+    });
+    wordcountEl.textContent = totalChars > 0 ? (totalChars * 3) + '+' : '…';
+  }
+
+  // ── Visitor count ──
+  var visitorEl = document.getElementById('visitor-count');
+  if (visitorEl) {
+    var key = 'blog_visit_count';
+    var count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+    localStorage.setItem(key, count);
+    visitorEl.textContent = count;
+  }
+
+  // ── Floating panels visibility ──
+  var floatingStats = document.getElementById('floating-stats');
+  var floatingActions = document.getElementById('floating-actions');
+  var mainContent = document.querySelector('.main-inner');
+
+  function updateFloatingVisibility() {
+    if (!mainContent) return;
+    var mainTop = mainContent.getBoundingClientRect().top;
+    var visible = mainTop < window.innerHeight;
+    if (floatingStats) {
+      floatingStats.classList.toggle('visible', visible);
+    }
+    if (floatingActions) {
+      floatingActions.classList.toggle('visible', visible);
+    }
+  }
+  window.addEventListener('scroll', updateFloatingVisibility, { passive: true });
+  updateFloatingVisibility();
+
+  // ── Scroll to top ──
+  var btnTop = document.getElementById('btn-scroll-top');
+  if (btnTop) {
+    btnTop.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ── Dark/light mode toggle ──
+  var btnTheme = document.getElementById('btn-theme-toggle');
+  if (btnTheme) {
+    btnTheme.addEventListener('click', function() {
+      var html = document.documentElement;
+      var isDark = html.classList.contains('dark-mode');
+      if (isDark) {
+        html.classList.remove('dark-mode');
+        btnTheme.querySelector('i').className = 'fa-solid fa-moon';
+      } else {
+        html.classList.add('dark-mode');
+        btnTheme.querySelector('i').className = 'fa-solid fa-sun';
+      }
+      applyThemeBg();
+      try { localStorage.setItem('blog_theme', isDark ? 'light' : 'dark'); } catch(e) {}
+    });
+
+    // Restore saved theme
+    var saved = localStorage.getItem('blog_theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark-mode');
+      btnTheme.querySelector('i').className = 'fa-solid fa-sun';
+    }
+  }
+
   // Scroll-triggered glass navbar
   var header = document.querySelector('.header');
   if (!header) return;
@@ -505,7 +746,6 @@ header.header { padding-top: 0; }
   var scrollArrow = document.querySelector('.hero-scroll');
   if (scrollArrow) {
     scrollArrow.addEventListener('click', function() {
-      var mainContent = document.querySelector('.main-inner');
       if (mainContent) {
         mainContent.scrollIntoView({ behavior: 'smooth' });
       }
