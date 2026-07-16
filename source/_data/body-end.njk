@@ -1,5 +1,148 @@
 <script>
 (function() {
+  // ── Theme background image ──
+  var themeBgLight = '';  // 日间模式背景图 URL，留空则无
+  var themeBgDark  = '';  // 夜间模式背景图 URL，留空则无
+
+  function applyThemeBg() {
+    var isDark = document.documentElement.classList.contains('dark-mode');
+    var bgUrl = isDark ? themeBgDark : themeBgLight;
+    if (bgUrl) {
+      document.body.style.backgroundImage = 'url(' + bgUrl + ')';
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+    } else {
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundSize = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundAttachment = '';
+    }
+  }
+  applyThemeBg();
+
+  // ── Hero gradual reveal ──
+  var heroContent = document.querySelector('.hero-content');
+  var heroTitle = document.querySelector('.hero-title');
+  var heroSubtitle = document.querySelector('.hero-subtitle');
+  var revealed = false;
+
+  function revealHero() {
+    if (revealed) return;
+    revealed = true;
+    if (heroTitle) heroTitle.classList.add('visible');
+    setTimeout(function() {
+      if (heroSubtitle) heroSubtitle.classList.add('visible');
+    }, 350);
+  }
+
+  function fastForward() {
+    if (heroContent) heroContent.classList.add('fast-forward');
+    if (heroTitle) { heroTitle.classList.add('visible'); }
+    if (heroSubtitle) { heroSubtitle.classList.add('visible'); }
+    revealed = true;
+  }
+
+  if (heroTitle || heroSubtitle) {
+    setTimeout(revealHero, 600);
+
+    var heroScrollHandler = function() {
+      if (window.scrollY > 30) {
+        fastForward();
+        window.removeEventListener('scroll', heroScrollHandler);
+      }
+    };
+    window.addEventListener('scroll', heroScrollHandler, { passive: true });
+  }
+
+  // ── Site running time ──
+  var startDate = new Date('2026-07-04T09:52:18+08:00');
+  var runtimeEl = document.getElementById('site-runtime');
+  function updateRuntime() {
+    if (!runtimeEl) return;
+    var now = new Date();
+    var diffMs = now - startDate;
+    var totalHours = Math.floor(diffMs / 3600000);
+    var days = Math.floor(totalHours / 24);
+    var hours = totalHours % 24;
+    runtimeEl.textContent = days + '天' + hours + '小时';
+  }
+  updateRuntime();
+  setInterval(updateRuntime, 60000);
+
+  // ── Total word count ──
+  var wordcountEl = document.getElementById('total-wordcount');
+  if (wordcountEl) {
+    var posts = document.querySelectorAll('.post-card-body');
+    var totalChars = 0;
+    posts.forEach(function(card) {
+      var excerpt = card.querySelector('.post-card-excerpt');
+      if (excerpt) totalChars += excerpt.textContent.length;
+    });
+    wordcountEl.textContent = totalChars > 0 ? (totalChars * 3) + '+' : '…';
+  }
+
+  // ── Visitor count ──
+  var visitorEl = document.getElementById('visitor-count');
+  if (visitorEl) {
+    var key = 'blog_visit_count';
+    var count = parseInt(localStorage.getItem(key) || '0', 10) + 1;
+    localStorage.setItem(key, count);
+    visitorEl.textContent = count;
+  }
+
+  // ── Floating panels visibility ──
+  var floatingStats = document.getElementById('floating-stats');
+  var floatingActions = document.getElementById('floating-actions');
+  var mainContent = document.querySelector('.main-inner');
+
+  function updateFloatingVisibility() {
+    if (!mainContent) return;
+    var mainTop = mainContent.getBoundingClientRect().top;
+    var visible = mainTop < window.innerHeight;
+    if (floatingStats) {
+      floatingStats.classList.toggle('visible', visible);
+    }
+    if (floatingActions) {
+      floatingActions.classList.toggle('visible', visible);
+    }
+  }
+  window.addEventListener('scroll', updateFloatingVisibility, { passive: true });
+  updateFloatingVisibility();
+
+  // ── Scroll to top ──
+  var btnTop = document.getElementById('btn-scroll-top');
+  if (btnTop) {
+    btnTop.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // ── Dark/light mode toggle ──
+  var btnTheme = document.getElementById('btn-theme-toggle');
+  if (btnTheme) {
+    btnTheme.addEventListener('click', function() {
+      var html = document.documentElement;
+      var isDark = html.classList.contains('dark-mode');
+      if (isDark) {
+        html.classList.remove('dark-mode');
+        btnTheme.querySelector('i').className = 'fa-solid fa-moon';
+      } else {
+        html.classList.add('dark-mode');
+        btnTheme.querySelector('i').className = 'fa-solid fa-sun';
+      }
+      applyThemeBg();
+      try { localStorage.setItem('blog_theme', isDark ? 'light' : 'dark'); } catch(e) {}
+    });
+
+    // Restore saved theme
+    var saved = localStorage.getItem('blog_theme');
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark-mode');
+      btnTheme.querySelector('i').className = 'fa-solid fa-sun';
+    }
+  }
+
   // Scroll-triggered glass navbar
   var header = document.querySelector('.header');
   if (!header) return;
@@ -19,7 +162,6 @@
   var scrollArrow = document.querySelector('.hero-scroll');
   if (scrollArrow) {
     scrollArrow.addEventListener('click', function() {
-      var mainContent = document.querySelector('.main-inner');
       if (mainContent) {
         mainContent.scrollIntoView({ behavior: 'smooth' });
       }

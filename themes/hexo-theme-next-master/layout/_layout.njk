@@ -81,19 +81,22 @@
 
           <div class="sidebar-links-custom">
             <a href="{{ url_for(config.archive_dir + '/') }}">
-              <i class="fa-regular fa-archive"></i> {{ __('menu.archives') }}
+              <i class="fa-solid fa-box-archive"></i> {{ __('menu.archives') }}
             </a>
             {%- if site.tags.length > 0 %}
             <a href="{{ url_for('/tag/') }}">
-              <i class="fa-regular fa-tags"></i> {{ __('menu.tags') }}
+              <i class="fa-solid fa-tags"></i> {{ __('menu.tags') }}
             </a>
             {%- endif %}
             {%- if site.categories.length > 0 %}
             <a href="{{ url_for('/category/') }}">
-              <i class="fa-regular fa-folder"></i> {{ __('menu.categories') }}
+              <i class="fa-solid fa-folder"></i> {{ __('menu.categories') }}
             </a>
             {%- endif %}
           </div>
+          <a href="https://github.com/greenpia033-bot" class="sidebar-github-link" title="GitHub" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i>
+          </a>
         </div>
       </aside>
       {%- endif %}
@@ -104,6 +107,30 @@
       </div>
     </div>
   </main>
+
+  <div class="floating-stats" id="floating-stats">
+    <div class="floating-stats-item">
+      <span class="floating-stats-num">{{ site.posts.length }}</span>
+      <span class="floating-stats-label">文章</span>
+    </div>
+    <div class="floating-stats-item">
+      <span class="floating-stats-num" id="total-wordcount">…</span>
+      <span class="floating-stats-label">字数</span>
+    </div>
+    <div class="floating-stats-item">
+      <span class="floating-stats-num" id="visitor-count">…</span>
+      <span class="floating-stats-label">访客</span>
+    </div>
+  </div>
+
+  <div class="floating-actions" id="floating-actions">
+    <button class="fa-btn" id="btn-scroll-top" title="回到顶部" aria-label="回到顶部">
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    <button class="fa-btn" id="btn-theme-toggle" title="切换主题" aria-label="切换日间/夜间模式">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+  </div>
 
   <footer class="footer">
     <div class="footer-inner">

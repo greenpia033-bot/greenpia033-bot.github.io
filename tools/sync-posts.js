@@ -339,11 +339,14 @@ async function syncCnblogs() {
 
 function buildCnblogsPost(item, body, postId) {
   const allLabels = (item.categories || []).filter(l => l.trim());
-  // 博客园的文章分类直接映射为 Hexo categories
-  const categories = allLabels;
-  const tags = [];
+  // 博客园标签映射为 Hexo tags
+  const categories = ['博客园'];
+  const tags = allLabels;
 
-  const tagsYaml = 'tags: []';
+  let tagsYaml = 'tags: []';
+  if (tags.length > 0) {
+    tagsYaml = 'tags:\n' + tags.map(t => `  - ${t}`).join('\n');
+  }
 
   let categoriesYaml = '';
   if (categories.length > 0) {
@@ -543,7 +546,8 @@ function buildJianshuPost(meta, body, url) {
 
   return `---
 title: ${meta.title}
-tags: []
+tags:
+  - 简书
 categories:
   - 简书
 date: ${dateStr}

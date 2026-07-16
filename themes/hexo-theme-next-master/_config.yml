@@ -29,7 +29,7 @@ custom_file_path:
   bodyEnd: source/_data/body-end.njk
   #variable: source/_data/variables.styl
   #mixin: source/_data/mixins.styl
-  #style: source/_data/styles.styl
+  style: source/_data/styles.styl
 
 
 # ---------------------------------------------------------------
@@ -48,7 +48,7 @@ darkmode: true
 # Hero Banner (homepage only)
 hero:
   enable: true
-  subtitle: 你好，来到我的博客的朋友
+  subtitle: 你好，欢迎来到我的小站
   # bg_image: /images/hero-bg.jpg  # uncomment to set custom bg image
 
 
@@ -156,7 +156,7 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-  url: /images/avatar.gif
+  url: https://github.com/greenpia033-bot.png
   # If true, the avatar will be displayed in circle.
   rounded: false
   # If true, the avatar will be rotated with the cursor.

@@ -77,9 +77,12 @@
 {%- endif %}
 
 {%- if theme.footer.powered %}
+  <div class="footer-motto">只要心拥有寄托，流落到哪里都不再是远方</div>
   <div class="powered-by">
     {%- set next_site = 'https://theme-next.js.org' if theme.scheme === 'Gemini' else 'https://theme-next.js.org/' + theme.scheme | lower + '/' %}
     {{- __('footer.powered', next_url('https://hexo.io', 'Hexo') + ' & ' + next_url(next_site, 'NexT.' + theme.scheme)) }}
+    <span class="footer-divider">|</span>
+    <span>本站已运行 <span id="site-runtime">…</span></span>
   </div>
 {%- endif %}
 
