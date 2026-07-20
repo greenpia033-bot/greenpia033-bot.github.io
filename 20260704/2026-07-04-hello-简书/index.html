@@ -613,22 +613,18 @@ header.header { padding-top: 0; }
   var bgCover = document.getElementById('home-bg-cover');
   var mainInner = document.querySelector('.main-inner');
   var MAX_BLUR = 15;
+  var BLUR_RANGE = 200;  // px over which blur ramps from 0 to max after entering articles
 
   function updateBgBlur() {
     if (!bgCover || !mainInner) return;
-    var vh = window.innerHeight;
     var mainTop = mainInner.getBoundingClientRect().top;
-    var mainHeight = mainInner.offsetHeight;
-    // blur starts when article area enters viewport, peaks at halfway
-    var start = vh * 0.3;           // begin blurring when 30% of hero still visible
-    var peak = -(mainHeight * 0.4); // max blur after scrolling through 40% of articles
     var progress;
-    if (mainTop >= start) {
+    if (mainTop > 0) {
+      // hero still partially visible: background clear
       progress = 0;
-    } else if (mainTop <= peak) {
-      progress = 1;
     } else {
-      progress = (start - mainTop) / (start - peak);
+      // into article area: blur ramps quickly to full
+      progress = Math.min(1, -mainTop / BLUR_RANGE);
     }
     var blurPx = (progress * MAX_BLUR).toFixed(1) + 'px';
     var imgs = bgCover.querySelectorAll('.home-bg-img');
@@ -741,6 +737,16 @@ header.header { padding-top: 0; }
 
   // ── Dark/light mode toggle ──
   var btnTheme = document.getElementById('btn-theme-toggle');
+  function setTheme(isDark) {
+    var html = document.documentElement;
+    if (isDark) {
+      html.classList.add('dark-mode');
+      if (btnTheme) btnTheme.querySelector('i').className = 'fa-solid fa-sun';
+    } else {
+      html.classList.remove('dark-mode');
+      if (btnTheme) btnTheme.querySelector('i').className = 'fa-solid fa-moon';
+    }
+  }
   function applyThemeImages() {
     var isDark = document.documentElement.classList.contains('dark-mode');
     var lightImg = document.querySelector('.home-bg-light');
@@ -748,28 +754,33 @@ header.header { padding-top: 0; }
     if (lightImg) lightImg.style.display = isDark ? 'none' : 'block';
     if (darkImg) darkImg.style.display = isDark ? 'block' : 'none';
   }
+  function getPreferredTheme() {
+    var saved = localStorage.getItem('blog_theme');
+    if (saved === 'dark') return true;
+    if (saved === 'light') return false;
+    // no manual preference → detect OS setting
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function applyTheme() {
+    setTheme(getPreferredTheme());
+    applyThemeImages();
+  }
   if (btnTheme) {
     btnTheme.addEventListener('click', function() {
-      var html = document.documentElement;
-      var isDark = html.classList.contains('dark-mode');
-      if (isDark) {
-        html.classList.remove('dark-mode');
-        btnTheme.querySelector('i').className = 'fa-solid fa-moon';
-      } else {
-        html.classList.add('dark-mode');
-        btnTheme.querySelector('i').className = 'fa-solid fa-sun';
-      }
+      var isDark = document.documentElement.classList.contains('dark-mode');
+      setTheme(!isDark);
       applyThemeImages();
       try { localStorage.setItem('blog_theme', isDark ? 'light' : 'dark'); } catch(e) {}
     });
-
-    // Restore saved theme
-    var saved = localStorage.getItem('blog_theme');
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark-mode');
-      btnTheme.querySelector('i').className = 'fa-solid fa-sun';
-    }
-    applyThemeImages();
+  }
+  applyTheme();
+  // listen for OS theme changes (only when user hasn't set manual preference)
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+      if (localStorage.getItem('blog_theme')) return; // user has manual preference
+      setTheme(e.matches);
+      applyThemeImages();
+    });
   }
 
   // Scroll-triggered glass navbar
