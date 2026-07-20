@@ -3,7 +3,7 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Green_Pia's Blog
+title: Green-Pia
 subtitle: '控制 / 计算机 / 杂项'
 description: '欢迎来到我的blog'
 keywords: 控制,计算机,杂项
@@ -13,7 +13,7 @@ timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://greenpia033-bot.github.io
+url: https://greenpia033-bot.github.io
 permalink: :year:month:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -105,6 +105,6 @@ theme: hexo-theme-next-master
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: git@github.com:greenpia033-bot/greenpia033-bot.github.io.git
+  repo: git@github.com:greenpia/greenpia.github.io.git
   branch: main
 

@@ -32,16 +32,46 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 30%, #24243e 60%, #1a2a6c 100%);
+  background: rgba(0,0,0,0.35);
 }
 .hero-banner::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 20% 50%, rgba(79,142,247,0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at 80% 20%, rgba(120,80,200,0.12) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, rgba(40,160,200,0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 20% 50%, rgba(79,142,247,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 20%, rgba(120,80,200,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 80%, rgba(40,160,200,0.05) 0%, transparent 50%);
   pointer-events: none;
+}
+
+/* ---- Fullscreen Background Image (home only) ---- */
+.home-bg-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+.home-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.25s ease-out;
+  will-change: filter;
+}
+.home-bg-dark {
+  display: none;
+}
+.dark-mode .home-bg-dark {
+  display: block;
+}
+.dark-mode .home-bg-light {
+  display: none;
 }
 .hero-banner .hero-bg-img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4;

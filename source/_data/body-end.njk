@@ -1,25 +1,32 @@
 <script>
 (function() {
-  // ── Theme background image ──
-  var themeBgLight = '';  // 日间模式背景图 URL，留空则无
-  var themeBgDark  = '';  // 夜间模式背景图 URL，留空则无
+  // ── Fullscreen background scroll blur ──
+  var bgCover = document.getElementById('home-bg-cover');
+  var mainInner = document.querySelector('.main-inner');
+  var MAX_BLUR = 15;
 
-  function applyThemeBg() {
-    var isDark = document.documentElement.classList.contains('dark-mode');
-    var bgUrl = isDark ? themeBgDark : themeBgLight;
-    if (bgUrl) {
-      document.body.style.backgroundImage = 'url(' + bgUrl + ')';
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
+  function updateBgBlur() {
+    if (!bgCover || !mainInner) return;
+    var mainTop = mainInner.getBoundingClientRect().top;
+    var mainHeight = mainInner.offsetHeight;
+    var threshold = mainHeight * 0.5;
+    var progress;
+    if (mainTop > 0) {
+      progress = 0;
     } else {
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundSize = '';
-      document.body.style.backgroundPosition = '';
-      document.body.style.backgroundAttachment = '';
+      progress = Math.min(1, Math.abs(mainTop) / threshold);
+    }
+    var blurPx = (progress * MAX_BLUR).toFixed(1) + 'px';
+    var imgs = bgCover.querySelectorAll('.home-bg-img');
+    for (var i = 0; i < imgs.length; i++) {
+      imgs[i].style.filter = 'blur(' + blurPx + ')';
     }
   }
-  applyThemeBg();
+
+  if (bgCover && mainInner) {
+    window.addEventListener('scroll', updateBgBlur, { passive: true });
+    updateBgBlur();
+  }
 
   // ── Hero gradual reveal ──
   var heroContent = document.querySelector('.hero-content');
@@ -131,7 +138,6 @@
         html.classList.add('dark-mode');
         btnTheme.querySelector('i').className = 'fa-solid fa-sun';
       }
-      applyThemeBg();
       try { localStorage.setItem('blog_theme', isDark ? 'light' : 'dark'); } catch(e) {}
     });
 

@@ -18,6 +18,10 @@
 
 <body itemscope itemtype="http://schema.org/WebPage"{% if theme.motion.enable %} class="use-motion"{% endif %}>
   {%- if is_home() %}
+  <div class="home-bg-cover" id="home-bg-cover">
+    <img src="{{ url_for('images/lily-white.jpg') }}" alt="" class="home-bg-img home-bg-light">
+    <img src="{{ url_for('images/miku-heads.jpg') }}" alt="" class="home-bg-img home-bg-dark">
+  </div>
   <section class="hero-banner">
     {%- if theme.hero and theme.hero.bg_image %}
     <img class="hero-bg-img" src="{{ url_for(theme.hero.bg_image) }}" alt="">
