@@ -1,10 +1,9 @@
 /**
- * sync-posts.js — 从博客园和简书自动拉取文章到 Hexo
+ * sync-posts.js — 从博客园自动拉取文章到 Hexo
  *
  * 博客园：RSS 获取文章列表 → 逐篇抓取全文（#cnblogs_post_body）
- * 简书：  爬取用户主页文章列表 → 逐篇抓取文章页正文
  *
- * 去重：通过 frontmatter 中的 cnblogs_url / jianshu_url 匹配已有文件
+ * 去重：通过 frontmatter 中的 cnblogs_url 匹配已有文件
  * 更新：已有文章如果正文为空或与原文不一致，自动更新为全文
  *
  * 用法：node tools/sync-posts.js
@@ -23,11 +22,6 @@ const SOURCES = {
     name: '博客园',
     rss: 'https://feed.cnblogs.com/blog/u/871804/rss/',
     username: 'greenpia',
-  },
-  jianshu: {
-    enabled: false,
-    name: '简书',
-    homeUrl: 'https://www.jianshu.com/u/afd28858c582',
   },
 };
 
@@ -129,11 +123,6 @@ function extractCnblogsPostId(url) {
   return m ? m[1] : null;
 }
 
-function extractJianshuPostId(url) {
-  const m = url.match(/\/p\/([a-f0-9]+)/i);
-  return m ? m[1] : null;
-}
-
 function slugify(title, maxLen = 50) {
   return title
     .replace(/[【】《》？?！!，,。.：:；、""''（）()\[\]{}]/g, '')
@@ -203,26 +192,6 @@ function findPostByCnblogsUrl(postId) {
   return null;
 }
 
-
-function extractJianshuUserId(homeUrl) {
-  const m = homeUrl.match(/\/u\/([a-f0-9]+)/i);
-  return m ? m[1] : null;
-}
-
-function findPostByJianshuUrl(postId) {
-  if (!fs.existsSync(POSTS_DIR)) return null;
-  const url = `https://www.jianshu.com/p/${postId}`;
-
-  for (const f of fs.readdirSync(POSTS_DIR)) {
-    if (!f.endsWith('.md')) continue;
-    const filepath = path.join(POSTS_DIR, f);
-    const content = fs.readFileSync(filepath, 'utf-8');
-    if (content.includes(url)) {
-      return { filename: f, filepath, content };
-    }
-  }
-  return null;
-}
 
 function hasFullContent(postContent) {
   if (postContent.includes('[阅读原文]') || postContent.includes('点击阅读原文')) return false;
@@ -380,185 +349,6 @@ ${bodyContent}
 }
 
 // ============================================================
-//  简书
-// ============================================================
-
-function extractJianshuBody(html) {
-  const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
-  if (articleMatch) return articleMatch[1].trim();
-
-  const contentMatch = html.match(
-    /<div[^>]*class="[^"]*show-content[^"]*"[^>]*>([\s\S]*?)<\/div>\s*(?:<div|$)/
-  );
-  if (contentMatch) return contentMatch[1].trim();
-
-  return null;
-}
-
-function extractJianshuMeta(html) {
-  const titleMatch = html.match(/<title>(.*?)(?:\s*-\s*简书)?\s*<\/title>/);
-  const title = titleMatch ? titleMatch[1].trim() : 'Untitled';
-
-  let dateStr = '';
-  const dateMatch = html.match(/"datePublished":\s*"([^"]+)"/)
-    || html.match(/<time[^>]*datetime="([^"]+)"/)
-    || html.match(/<span[^>]*class="[^"]*publish-time[^"]*"[^>]*>([^<]+)<\/span>/);
-  if (dateMatch) dateStr = dateMatch[1].trim();
-  if (dateStr.includes('.')) {
-    dateStr = dateStr.replace(/\./g, '-').replace(/\s+/, 'T');
-  }
-
-  return { title, pubDate: dateStr };
-}
-
-async function fetchJianshuList() {
-  const posts = [];
-  const seen = new Set(); // 跨页去重
-  let page = 1;
-  const maxPages = 5;
-
-  while (page <= maxPages) {
-    const url = `${SOURCES.jianshu.homeUrl}?order_by=shared_at&page=${page}`;
-    console.log(`   第 ${page} 页...`);
-
-    const html = await fetchWithRetry(url);
-    if (!html) break;
-
-    const itemRe = /<a[^>]*class="[^"]*title[^"]*"[^>]*href="(\/p\/[a-f0-9]+)"[^>]*>([\s\S]*?)<\/a>/g;
-    let m;
-    let foundOnPage = 0;
-
-    while ((m = itemRe.exec(html)) !== null) {
-      const href = m[1];
-      const title = m[2].replace(/<[^>]+>/g, '').trim();
-      if (title && !seen.has(href)) {
-        seen.add(href);
-        posts.push({ title, url: `https://www.jianshu.com${href}`, date: '' });
-        foundOnPage++;
-      }
-    }
-
-    console.log(`       找到 ${foundOnPage} 篇`);
-    if (foundOnPage === 0) break;
-
-    page++;
-    await sleep(2000);
-  }
-
-  return posts;
-}
-
-async function syncJianshu() {
-  console.log('════ 简书同步 ════\n');
-
-  console.log(`📡 获取文章列表: ${SOURCES.jianshu.homeUrl}`);
-  const listItems = await fetchJianshuList();
-  console.log(`📋 共找到 ${listItems.length} 篇文章\n`);
-
-  if (listItems.length === 0) {
-    console.log('⚠ 未找到文章，简书页面结构可能已变更\n');
-    return { created: 0, updated: 0, skipped: 0 };
-  }
-
-  let created = 0, updated = 0, skipped = 0;
-
-  for (let i = 0; i < listItems.length; i++) {
-    const item = listItems[i];
-    const progress = `[${i + 1}/${listItems.length}]`;
-    console.log(`${progress} ${item.title}`);
-
-    const postId = extractJianshuPostId(item.url);
-    if (!postId) {
-      console.log(`       ⚠ 无法提取 postId\n`);
-      skipped++;
-      continue;
-    }
-
-    const existing = findPostByJianshuUrl(postId);
-    if (existing && hasFullContent(existing.content)) {
-      console.log(`       ⏭ 已有全文，跳过\n`);
-      skipped++;
-      continue;
-    }
-
-    console.log(`       ⬇ 抓取全文: ${item.url}`);
-    const pageHtml = await fetchWithRetry(item.url);
-    // 校验作者是否是本人
-    if (pageHtml) {
-      const myUserId = extractJianshuUserId(SOURCES.jianshu.homeUrl);
-      const authorMatch = pageHtml.match(/\/u\/([a-f0-9]+)/);
-      if (myUserId && authorMatch && authorMatch[1] !== myUserId) {
-        console.log(`       ⏭ 非本人文章 (作者: ${authorMatch[1]})，跳过\n`);
-        skipped++;
-        continue;
-      }
-    }
-    let body = null;
-    let meta = { title: item.title, pubDate: item.date };
-
-    if (pageHtml) {
-      meta = { ...meta, ...extractJianshuMeta(pageHtml) };
-      body = extractJianshuBody(pageHtml);
-      if (body) {
-        console.log(`       ✓ 正文提取成功 (${body.length} 字符)`);
-      } else {
-        console.log(`       ⚠ 无法提取正文，仅保留链接`);
-      }
-    }
-
-    const postContent = buildJianshuPost(meta, body, item.url);
-
-    let targetPath;
-    if (existing) {
-      targetPath = existing.filepath;
-      updated++;
-      console.log(`       ✏ 更新已有文章`);
-    } else {
-      const dateStr = meta.pubDate
-        ? new Date(meta.pubDate).toISOString().split('T')[0]
-        : new Date().toISOString().split('T')[0];
-      const filename = `${dateStr}-${slugify(meta.title)}.md`;
-      targetPath = path.join(POSTS_DIR, filename);
-      created++;
-      console.log(`       ✨ 新文章`);
-    }
-
-    fs.writeFileSync(targetPath, postContent, 'utf-8');
-    console.log('');
-
-    await sleep(REQUEST_DELAY);
-  }
-
-  console.log(`✅ 简书: 新增 ${created}, 更新 ${updated}, 跳过 ${skipped}\n`);
-  return { created, updated, skipped };
-}
-
-function buildJianshuPost(meta, body, url) {
-  const dateStr = formatDate(meta.pubDate);
-
-  let bodyContent;
-  if (body) {
-    const excerpt = generateExcerpt(body);
-    bodyContent = `${excerpt}\n<!-- more -->\n\n${body}`;
-  } else {
-    bodyContent = `> 本文自动同步自 [简书](${url})，点击查看原文`;
-  }
-
-  return `---
-title: ${meta.title}
-tags:
-  - 简书
-categories:
-  - 简书
-date: ${dateStr}
-jianshu_url: ${url}
----
-
-${bodyContent}
-`;
-}
-
-// ============================================================
 //  主流程
 // ============================================================
 
@@ -580,18 +370,9 @@ async function main() {
     }
   }
 
-  if (SOURCES.jianshu.enabled) {
-    try {
-      results.jianshu = await syncJianshu();
-    } catch (err) {
-      console.error(`❌ 简书同步失败: ${err.message}`);
-      results.jianshu = { created: 0, updated: 0, skipped: 0, error: err.message };
-    }
-  }
-
-  const totalCreated = (results.cnblogs?.created || 0) + (results.jianshu?.created || 0);
-  const totalUpdated = (results.cnblogs?.updated || 0) + (results.jianshu?.updated || 0);
-  const totalSkipped = (results.cnblogs?.skipped || 0) + (results.jianshu?.skipped || 0);
+  const totalCreated = results.cnblogs?.created || 0;
+  const totalUpdated = results.cnblogs?.updated || 0;
+  const totalSkipped = results.cnblogs?.skipped || 0;
 
   console.log('═══════════════════════════════════');
   console.log(`🎉 同步完成！`);
