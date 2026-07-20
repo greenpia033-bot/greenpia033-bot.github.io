@@ -639,14 +639,19 @@ ps：提升我对整个工程的理解的是学长代码的两个变量：<br>
 
   function updateBgBlur() {
     if (!bgCover || !mainInner) return;
+    var vh = window.innerHeight;
     var mainTop = mainInner.getBoundingClientRect().top;
     var mainHeight = mainInner.offsetHeight;
-    var threshold = mainHeight * 0.5;
+    // blur starts when article area enters viewport, peaks at halfway
+    var start = vh * 0.3;           // begin blurring when 30% of hero still visible
+    var peak = -(mainHeight * 0.4); // max blur after scrolling through 40% of articles
     var progress;
-    if (mainTop > 0) {
+    if (mainTop >= start) {
       progress = 0;
+    } else if (mainTop <= peak) {
+      progress = 1;
     } else {
-      progress = Math.min(1, Math.abs(mainTop) / threshold);
+      progress = (start - mainTop) / (start - peak);
     }
     var blurPx = (progress * MAX_BLUR).toFixed(1) + 'px';
     var imgs = bgCover.querySelectorAll('.home-bg-img');
@@ -759,6 +764,13 @@ ps：提升我对整个工程的理解的是学长代码的两个变量：<br>
 
   // ── Dark/light mode toggle ──
   var btnTheme = document.getElementById('btn-theme-toggle');
+  function applyThemeImages() {
+    var isDark = document.documentElement.classList.contains('dark-mode');
+    var lightImg = document.querySelector('.home-bg-light');
+    var darkImg = document.querySelector('.home-bg-dark');
+    if (lightImg) lightImg.style.display = isDark ? 'none' : 'block';
+    if (darkImg) darkImg.style.display = isDark ? 'block' : 'none';
+  }
   if (btnTheme) {
     btnTheme.addEventListener('click', function() {
       var html = document.documentElement;
@@ -770,6 +782,7 @@ ps：提升我对整个工程的理解的是学长代码的两个变量：<br>
         html.classList.add('dark-mode');
         btnTheme.querySelector('i').className = 'fa-solid fa-sun';
       }
+      applyThemeImages();
       try { localStorage.setItem('blog_theme', isDark ? 'light' : 'dark'); } catch(e) {}
     });
 
@@ -779,6 +792,7 @@ ps：提升我对整个工程的理解的是学长代码的两个变量：<br>
       document.documentElement.classList.add('dark-mode');
       btnTheme.querySelector('i').className = 'fa-solid fa-sun';
     }
+    applyThemeImages();
   }
 
   // Scroll-triggered glass navbar
